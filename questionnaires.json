@@ -1,0 +1,41 @@
+[
+  {
+    "questionnaire_id": 1,
+    "title": "Hello world",
+    "questions": [
+      {
+        "question_id": 1,
+        "question_text": 1,
+        "answers": [
+          {
+            "answer_text": "Yes",
+            "next_question_id": 1
+          },
+          {
+            "answer_text": "No",
+            "next_question_id": 2
+          }
+        ]
+      },
+      {
+        "question_id": 2,
+        "question_text": "Hello with id 2",
+        "answers": [
+          {
+            "answer_text": "Yes",
+            "next_question_id": 3
+          },
+          {
+            "answer_text": "No",
+            "next_question_id": 3
+          }
+        ]
+      },
+      {
+        "question_id": 3,
+        "question_text": "Thank you bye ",
+        "answers": []
+      }
+    ]
+  }
+]
