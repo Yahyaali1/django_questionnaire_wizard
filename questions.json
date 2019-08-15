@@ -3,10 +3,34 @@
     "title": "helloworld",
     "questions": {
       "1": {
-        "title": "Hello this is new",
+        "question_text": "Hello this is new",
         "answers": {
-          "1": {}
+          "1": {
+            "answer_text": "Yes",
+            "next_question_id": "2"
+          },
+          "2": {
+            "answer_text": "No",
+            "next_question_id": "2"
+          }
         }
+      },
+      "2": {
+        "question_text": "Hello this is new2",
+        "answers": {
+          "1": {
+            "answer_text": "Yes",
+            "next_question_id": "3"
+          },
+          "2": {
+            "answer_text": "No",
+            "next_question_id": "3"
+          }
+        }
+      },
+      "3": {
+        "question_id": "Hello this is last",
+        "answers": {}
       }
     }
   }

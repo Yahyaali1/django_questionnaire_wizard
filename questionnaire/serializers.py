@@ -2,11 +2,12 @@ from rest_framework import serializers
 
 
 class QuestionnaireListSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    questionnaire_id = serializers.IntegerField()
     title = serializers.CharField()
 
 
 class AnswerSerializer(serializers.Serializer):
+    answer_id = serializers.IntegerField()
     answer_text = serializers.CharField()
     next_question_id = serializers.IntegerField()
 
