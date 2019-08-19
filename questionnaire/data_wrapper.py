@@ -1,5 +1,6 @@
 import json
 import copy
+import logging
 # Local Imports
 from .datamodels.datamodels import Questionnaire, ResponseModelForLog
 from .shared.shared_keys import Key
@@ -8,11 +9,9 @@ from .shared.data_store import DataStore
 
 __DATA_STORE_OBJECT = DataStore()
 __DATA, __ALL_QUESTIONNIRES = __DATA_STORE_OBJECT.get_data()
-print(__DATA)
 
 
 def get_questionnaire_list():
-    print(__ALL_QUESTIONNIRES)
     return __ALL_QUESTIONNIRES
 
 # Returns questionnaire from json array
@@ -57,11 +56,9 @@ def get_first_question(questionnaire_id):
     first_question = {}
     question_id = None
     questionnaire = __get_questionnaire_by_id(questionnaire_id)
-    print(questionnaire)
     if questionnaire:
         for key, value in questionnaire[Key.QUESTIONS].items():
             first_question = value
-            print(first_question)
             question_id = key
             break
     else:
@@ -74,10 +71,8 @@ def get_first_question(questionnaire_id):
 def get_question_by_id(questionnaire_id: str, question_id: str):
     current_question = {}
     questionnaire = __get_questionnaire_by_id(questionnaire_id)
-    print(questionnaire)
     if questionnaire and question_id in questionnaire[Key.QUESTIONS]:
         question = __get_question_by_id(question_id, questionnaire)
-        print(question)
         current_question = prepare_question_response(
             question, question_id, questionnaire_id)
     else:
@@ -87,13 +82,14 @@ def get_question_by_id(questionnaire_id: str, question_id: str):
 
 
 def print_log(data: ResponseModelForLog):
+    logging.log(1, "User Conversation")
     for items in data:
         questionnaire = __get_questionnaire_by_id(
             str(items[Key.QUESTIONNAIRE_ID]))
         question = questionnaire[Key.QUESTIONS][str(items[Key.QUESTION_ID])]
-        print(question[Key.QUESTION_TEXT], "->")
-        print(question[Key.ANSWERS][str(items[Key.ANSWER_ID])]
-              [Key.ANSWER_TEXT], "->")
+        logging.log(1, question[Key.QUESTION_TEXT], "->")
+        logging.log(1, question[Key.ANSWERS][str(items[Key.ANSWER_ID])]
+                    [Key.ANSWER_TEXT], "->")
 
 
 def get_next_question_by_answer_id(questionnaire_id: str, question_id: str,
