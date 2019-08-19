@@ -1,71 +1,12 @@
 import json
-import traceback
 import copy
+# Local Imports
+from .datamodels.datamodels import Questionnaire, ResponseModelForLog
+from .shared.shared_keys import Key
+from .shared.errors_dict import ErrorDict
+from .shared.data_store import DataStore
 
-from .datamodels.datamodels import Questionnaire
-# TODO Move the file name to external file
-# from questionnaire.models import Questionnaire, Questions, Answers
-KEY_TITLE = "title"
-KEY_QUESTIONS = "questions"
-KEY_QUESTION_ID = "question_id"
-KEY_ANSWERS = "answers"
-KEY_ANSWER_TEXT = "answer_text"
-KEY_ANSWER_ID = "answer_id"
-KEY_NEXT_QUEST_ID = "next_question_id"
-KEY_QUESTIONNAIRE_ID = "questionnaire_id"
-KEY_ERROR = "error"
-STRING_ERROR_QUESTION_ID = "No question found with this id"
-STRING_ERROR_ANSWER_ID = "No answer found with this id"
-STRING_ERROR_QUESTIONNAIRE_ID = "No questionnaire found with this id"
-ERROR_QUESTION_ID_DICT = {KEY_ERROR: STRING_ERROR_QUESTION_ID}
-ERROR_ANSWER_ID_DICT = {KEY_ERROR: STRING_ERROR_ANSWER_ID}
-ERROR_QUESTIONNAIRE_ID_DICT = {KEY_ERROR: STRING_ERROR_QUESTIONNAIRE_ID}
-
-
-class __DataStore():
-    def __init__(self):
-        self.__questionnaires = self.___read_file('questionnaires.json')
-        self.__questionnaires_list = self.__get_all_questionnaire()
-
-    def get_data(self):
-        return self.__questionnaires, self.__questionnaires_list
-    # TODO add the file to path variables
-
-    def __get_all_questionnaire(self):
-        data = []
-        for key, value in self.__questionnaires.items():
-            data.append(Questionnaire(id=key, title=value[KEY_TITLE]))
-        return data
-
-    def ___read_file(self, file_name):
-        data = {}
-        try:
-            with open(file_name, 'r') as json_file:
-                data = json.load(json_file)
-                json_file.close()
-        except Exception:
-            print(traceback.format_exc())
-        return data
-
-    # def load(self):
-    #     for item in self.__questionnaires:
-    #         Questionnaire.objects.all().delete()
-    #         questionnaire = Questionnaire(title=item["title"])
-    #         questionnaire.save()
-    #         for item_question in item["questions"]:
-    #             question = Questions(questionnaire=questionnaire,
-    #                                  question_id=item_question["question_id"],
-    #                                  title=item_question["question_text"],
-    #                                  first_question=item_question["first_question"])
-    #             question.save()
-    #             for item_answers in item_question["answers"]:
-    #                 answers = Answers(
-    #                     question=question, title=item_answers["answer_text"], next_question_id=item_answers["next_question_id"])
-    #                 answers.save()
-    #         print(item)
-
-
-__DATA_STORE_OBJECT = __DataStore()
+__DATA_STORE_OBJECT = DataStore()
 __DATA, __ALL_QUESTIONNIRES = __DATA_STORE_OBJECT.get_data()
 print(__DATA)
 
@@ -88,27 +29,27 @@ def __get_questionnaire_by_id(id: int):
 
 def __get_question_by_id(id: str, questionnaire):
     data = {}
-    if id in questionnaire[KEY_QUESTIONS]:
-        data = questionnaire[KEY_QUESTIONS][id]
+    if id in questionnaire[Key.QUESTIONS]:
+        data = questionnaire[Key.QUESTIONS][id]
     return data
 
 
 def prepare_question_response(question: dict, question_id: int, questionnaire_id: int):
     data_answers = []
     question = copy.deepcopy(question)
-    if KEY_ANSWERS in question:
+    if Key.ANSWERS in question:
 
-        for key, value in question[KEY_ANSWERS].items():
+        for key, value in question[Key.ANSWERS].items():
             temp = value
-            temp[KEY_ANSWER_ID] = key
+            temp[Key.ANSWER_ID] = key
             data_answers.append(temp)
 
-        question[KEY_ANSWERS] = data_answers
-        question[KEY_QUESTIONNAIRE_ID] = questionnaire_id
-        question[KEY_QUESTION_ID] = question_id
+        question[Key.ANSWERS] = data_answers
+        question[Key.QUESTIONNAIRE_ID] = questionnaire_id
+        question[Key.QUESTION_ID] = question_id
         return question
     else:
-        return {}
+        return ErrorDict.QUESTION_ID_DICT
 
 
 def get_first_question(questionnaire_id):
@@ -117,11 +58,13 @@ def get_first_question(questionnaire_id):
     questionnaire = __get_questionnaire_by_id(questionnaire_id)
     print(questionnaire)
     if questionnaire:
-        for key, value in questionnaire[KEY_QUESTIONS].items():
+        for key, value in questionnaire[Key.QUESTIONS].items():
             first_question = value
             print(first_question)
             question_id = key
             break
+    else:
+        return ErrorDict.QUESTIONNAIRE_ID_DICT
 
     return prepare_question_response(first_question, question_id, questionnaire_id)
 
@@ -130,13 +73,25 @@ def get_question_by_id(questionnaire_id: str, question_id: str):
     current_question = {}
     questionnaire = __get_questionnaire_by_id(questionnaire_id)
     print(questionnaire)
-    if questionnaire and question_id in questionnaire[KEY_QUESTIONS]:
+    if questionnaire and question_id in questionnaire[Key.QUESTIONS]:
         question = __get_question_by_id(question_id, questionnaire)
         print(question)
         current_question = prepare_question_response(
             question, question_id, questionnaire_id)
+    else:
+        current_question = ErrorDict.QUESTION_ID_DICT
 
     return current_question
+
+
+def print_log(data: ResponseModelForLog):
+    for items in data:
+        questionnaire = __get_questionnaire_by_id(
+            str(items[Key.QUESTIONNAIRE_ID]))
+        question = questionnaire[Key.QUESTIONS][str(items[Key.QUESTION_ID])]
+        print(question[Key.QUESTION_TEXT], "->")
+        print(question[Key.ANSWERS][str(items[Key.ANSWER_ID])]
+              [Key.ANSWER_TEXT], "->")
 
 
 def get_next_question_by_answer_id(questionnaire_id: str, question_id: str, answer_id):
@@ -146,10 +101,10 @@ def get_next_question_by_answer_id(questionnaire_id: str, question_id: str, answ
         question = __get_question_by_id(question_id, questionnaire)
 
         if question:
-            answers = question[KEY_ANSWERS]
+            answers = question[Key.ANSWERS]
 
             if answer_id in answers:
-                next_question_id = answers[answer_id][KEY_NEXT_QUEST_ID]
+                next_question_id = answers[answer_id][Key.NEXT_QUEST_ID]
                 next_question = __get_question_by_id(
                     next_question_id, questionnaire)
                 next_question = prepare_question_response(
@@ -158,12 +113,12 @@ def get_next_question_by_answer_id(questionnaire_id: str, question_id: str, answ
                 if next_question:
                     return next_question
                 else:
-                    ERROR_QUESTION_ID_DICT
+                    ErrorDict.QUESTION_ID_DICT
 
             else:
-                return ERROR_ANSWER_ID_DICT
+                return ErrorDict.ANSWER_ID_DICT
 
         else:
-            return ERROR_QUESTION_ID_DICT
+            return ErrorDict.QUESTION_ID_DICT
     else:
-        return ERROR_QUESTIONNAIRE_ID_DICT
+        return ErrorDict.QUESTIONNAIRE_ID_DICT

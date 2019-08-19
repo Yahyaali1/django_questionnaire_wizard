@@ -6,14 +6,7 @@ class QuestionnaireListSerializer(serializers.Serializer):
     title = serializers.CharField()
 
 
-class AnswerSerializer(serializers.Serializer):
-    answer_id = serializers.IntegerField()
-    answer_text = serializers.CharField()
-    next_question_id = serializers.IntegerField()
-
-
-class QuestionSerializer(serializers.Serializer):
-    question_id = serializers.IntegerField()
-    question_text = serializers.CharField()
+class ResponseLogSerializer(serializers.Serializer):
     questionnaire_id = serializers.IntegerField()
-    answers = serializers.ListField(child=AnswerSerializer())
+    question_id = serializers.IntegerField()
+    answer_id = serializers.IntegerField()
