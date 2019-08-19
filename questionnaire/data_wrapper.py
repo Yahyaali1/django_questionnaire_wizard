@@ -34,7 +34,8 @@ def __get_question_by_id(id: str, questionnaire):
     return data
 
 
-def prepare_question_response(question: dict, question_id: int, questionnaire_id: int):
+def prepare_question_response(question: dict, question_id: int,
+                              questionnaire_id: int):
     data_answers = []
     question = copy.deepcopy(question)
     if Key.ANSWERS in question:
@@ -66,7 +67,8 @@ def get_first_question(questionnaire_id):
     else:
         return ErrorDict.QUESTIONNAIRE_ID_DICT
 
-    return prepare_question_response(first_question, question_id, questionnaire_id)
+    return prepare_question_response(first_question, question_id,
+                                     questionnaire_id)
 
 
 def get_question_by_id(questionnaire_id: str, question_id: str):
@@ -94,7 +96,8 @@ def print_log(data: ResponseModelForLog):
               [Key.ANSWER_TEXT], "->")
 
 
-def get_next_question_by_answer_id(questionnaire_id: str, question_id: str, answer_id):
+def get_next_question_by_answer_id(questionnaire_id: str, question_id: str,
+                                   answer_id):
     next_question = {}
     questionnaire = __get_questionnaire_by_id(questionnaire_id)
     if questionnaire:
