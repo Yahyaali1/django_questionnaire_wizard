@@ -87,8 +87,8 @@ def print_log(data: ResponseModelForLog):
         questionnaire = __get_questionnaire_by_id(
             str(items[Key.QUESTIONNAIRE_ID]))
         question = questionnaire[Key.QUESTIONS][str(items[Key.QUESTION_ID])]
-        logging.log(1, question[Key.QUESTION_TEXT], "->")
-        logging.log(1, question[Key.ANSWERS][str(items[Key.ANSWER_ID])]
+        print(1, question[Key.QUESTION_TEXT], "->")
+        print(1, question[Key.ANSWERS][str(items[Key.ANSWER_ID])]
                     [Key.ANSWER_TEXT], "->")
 
 
