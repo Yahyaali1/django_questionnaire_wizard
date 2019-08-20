@@ -51,14 +51,18 @@ class DataStore():
                     Key.QUESTION_TEXT: {"type": "string"},
                     Key.ANSWERS: {"type": "object",
                                   "maxProperties": self.MAX_ANSWERS,
-                                  "patternProperties": {"^[0-9]+$": {"type": "object",
-                                                                     "properties": {
-                                                                         Key.ANSWER_TEXT: {"type": "string"},
-                                                                         Key.NEXT_QUEST_ID: {
-                                                                             "type": "string"}
-                                                                     },
-                                                                     "required": [Key.ANSWER_TEXT, Key.NEXT_QUEST_ID]}
-                                                        },
+                                  "patternProperties":
+                                  {"^[0-9]+$": {"type": "object",
+                                                "properties": {
+                                                    Key.ANSWER_TEXT:
+                                                    {"type": "string"},
+                                                    Key.NEXT_QUEST_ID:
+                                                    {"type": "string"}
+                                                },
+                                                "required": [Key.ANSWER_TEXT,
+                                                             Key.NEXT_QUEST_ID]
+                                                }
+                                   },
                                   "additionalProperties": False
                                   }
                 },
@@ -68,28 +72,16 @@ class DataStore():
         }
         schema_questionnaire = {
             "type": "object",
-            "patternProperties": {"^[0-9]+$": {"type": "object", "properties": {
-                Key.TITLE: {"type": "string"},
-                Key.QUESTIONS: schema_question
-            },
-                "required": [Key.TITLE, Key.QUESTIONS]}, "additionalProperties": False}
+            "patternProperties": {"^[0-9]+$": {"type": "object",
+                                               "properties": {
+                                                   Key.TITLE:
+                                                   {"type": "string"},
+                                                   Key.QUESTIONS:
+                                                   schema_question
+                                               },
+                                               "required":
+                                               [Key.TITLE, Key.QUESTIONS]},
+                                  "additionalProperties": False}
         }
 
         validate(instance=data, schema=schema_questionnaire)
-
-        # def load(self):
-        #     for item in self.__questionnaires:
-        #         Questionnaire.objects.all().delete()
-        #         questionnaire = Questionnaire(title=item["title"])
-        #         questionnaire.save()
-        #         for item_question in item["questions"]:
-        #             question = Questions(questionnaire=questionnaire,
-        #                                  question_id=item_question["question_id"],
-        #                                  title=item_question["question_text"],
-        #                                  first_question=item_question["first_question"])
-        #             question.save()
-        #             for item_answers in item_question["answers"]:
-        #                 answers = Answers(
-        #                     question=question, title=item_answers["answer_text"], next_question_id=item_answers["next_question_id"])
-        #                 answers.save()
-        #         print(item)
