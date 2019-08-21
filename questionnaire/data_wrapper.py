@@ -1,6 +1,6 @@
 """
 Data wrapper provides with utility functions to serve data to the api services.
-Provides with functions to get questionnaire List and question given id. 
+Provides with functions to get questionnaire List and question given id
 """
 import json
 import copy
@@ -14,7 +14,7 @@ from .shared.data_store import DataStore
 import logging
 
 # Get an instance of a logger
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 __DATA_STORE_OBJECT = DataStore()
@@ -26,7 +26,6 @@ def get_questionnaire_list():
     Returns questionnaire from json array
     """
     return __ALL_QUESTIONNIRES
-
 
 
 def __get_questionnaire_by_id(id: int):
@@ -47,6 +46,9 @@ def __get_question_by_id(id: str, questionnaire):
 
 def prepare_question_response(question: dict, question_id: int,
                               questionnaire_id: int):
+    """
+    Prepares response structure by coping data from loaded json
+    """
     data_answers = []
     question = copy.deepcopy(question)
     if Key.ANSWERS in question:
@@ -65,6 +67,9 @@ def prepare_question_response(question: dict, question_id: int,
 
 
 def get_first_question(questionnaire_id):
+    """
+    Extracts the first question based on questionnaire id
+    """
     first_question = {}
     question_id = None
     questionnaire = __get_questionnaire_by_id(questionnaire_id)
@@ -81,6 +86,9 @@ def get_first_question(questionnaire_id):
 
 
 def get_question_by_id(questionnaire_id: str, question_id: str):
+    """
+    Extracts question based on questionnaire and question id
+    """
     current_question = {}
     questionnaire = __get_questionnaire_by_id(questionnaire_id)
     if questionnaire and question_id in questionnaire[Key.QUESTIONS]:
@@ -94,18 +102,24 @@ def get_question_by_id(questionnaire_id: str, question_id: str):
 
 
 def print_log(data: ResponseModelForLog):
-    logger.debug(msg="User Conversation",level=1)
+    """
+    Prints log for user conversation
+    """
+    logger.info(msg="User Conversation")
     for items in data:
         questionnaire = __get_questionnaire_by_id(
             str(items[Key.QUESTIONNAIRE_ID]))
         question = questionnaire[Key.QUESTIONS][str(items[Key.QUESTION_ID])]
-        logger.debug( msg=question[Key.QUESTION_TEXT]+ "->",level=1)
-        logger.debug(msg=question[Key.ANSWERS][str(items[Key.ANSWER_ID])]
-                    [Key.ANSWER_TEXT]+ "->",level=1)
+        logger.info(msg=question[Key.QUESTION_TEXT] + "->")
+        logger.info(msg=question[Key.ANSWERS][str(items[Key.ANSWER_ID])]
+                    [Key.ANSWER_TEXT] + "->")
 
 
 def get_next_question_by_answer_id(questionnaire_id: str, question_id: str,
                                    answer_id):
+    """
+    Extracts next question based on answer id.
+    """
     next_question = {}
     questionnaire = __get_questionnaire_by_id(questionnaire_id)
     if questionnaire:

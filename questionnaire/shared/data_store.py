@@ -20,7 +20,7 @@ logger = logging.getLogger()
 class DataStore():
     """
     Loads data from json file name specified in settings
-    Validates the structure using json schema 
+    Validates the structure using json schema
     """
     MAX_ANSWERS = 5
 
@@ -31,9 +31,17 @@ class DataStore():
         self.__questionnaires_list = self.__get_all_questionnaire()
 
     def get_data(self):
+        """
+        Returns data that is loaded from the jsonfile.
+        List for the questionnaires that are available
+        """
         return self.__questionnaires, self.__questionnaires_list
 
     def __get_all_questionnaire(self):
+        """
+        Forms an array of questionnaires out of json as batch process to
+        prevent overhead on each api call
+        """
         data = []
         for key, value in self.__questionnaires.items():
             data.append(Questionnaire(id=key, title=value[Key.TITLE]))
@@ -48,10 +56,13 @@ class DataStore():
                     self.__validate_json(data)
                 json_file.close()
         except Exception:
-            logger.error(msg=traceback.format_exc())
+            logger.info(msg=traceback.format_exc())
         return data
 
     def __validate_json(self, data):
+        """
+        Validates json structure from loaded file
+        """
         schema_question = {
             "type": "object",
             "patternProperties": {"^[0-9]+$": {
