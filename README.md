@@ -53,8 +53,87 @@
   ```
 ### Questionnaire Strcuture File
 
+Structure:
+- Notes:
+   - Json file is based on dict structure.
+   - Id's are expected to be integers as dict keys(Strings). 
+   - "next_question_id" is the reference for fetching next question based on answer choice. 
+   - Empty "answers" dict marks the last question. 
+   - Answer to a question has a limit of 5.
+   
+- Summary:
+   ```json 
+  {
+  "<questionnaire_id>": {
+    "title": "About you",
+    "questions": {
+      "<question_id>": {
+        "question_text": "How Are you ?",
+        "answers": {
+          "<answer_id>": {
+            "answer_text": "Yes",
+            "next_question_id": "<question_id>"
+          },
+          "<answer_id>": {
+            "answer_text": "No",
+            "next_question_id": "<question_id>"
+          }
+        }
+      }
+    }
+  }
+   ```
+- Example
+
+```json
+      {
+        "1": {
+          "title": "helloworld",
+          "questions": {
+            "1": {
+              "question_text": "1",
+              "answers": {
+                "1": {
+                  "answer_text": "Yes",
+                  "next_question_id": "2"
+                },
+                "2": {
+                  "answer_text": "No",
+                  "next_question_id": "2"
+                }
+              }
+            },
+            "2": {
+              "question_text": "Hello this is new2",
+              "answers": {
+                "1": {
+                  "answer_text": "Yes",
+                  "next_question_id": "3"
+                },
+                "2": {
+                  "answer_text": "No",
+                  "next_question_id": "3"
+                }
+              }
+            },
+            "3": {
+              "question_text": "Hello this is last",
+              "answers": {}
+            }
+          }
+        }
+      }
+```
 ### How to instructions:
- 
+#### Project Setup
+Setting up backend
+- Using Terminal 
+   - Clone/extract project files in your local drive
+   - Create virtual enviornment under your project dir
+   - To install project dependencies run ```pip -r install requirements.txt```
+   - Run migration ```python manage.py migrate```
+   - Deploy server on local host ``` python manage.py runserver```
+- Note : For production deployment settings.py under interviewTask needs to updated for allowed host with debug=FALSE. 
 
 #### Assumptions 
 - Python > 3
