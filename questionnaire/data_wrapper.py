@@ -1,3 +1,7 @@
+"""
+Data wrapper provides with utility functions to serve data to the api services.
+Provides with functions to get questionnaire List and question given id. 
+"""
 import json
 import copy
 import logging
@@ -6,15 +10,23 @@ from .datamodels.datamodels import Questionnaire, ResponseModelForLog
 from .shared.shared_keys import Key
 from .shared.errors_dict import ErrorDict
 from .shared.data_store import DataStore
+# import the logging library
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger()
+
 
 __DATA_STORE_OBJECT = DataStore()
 __DATA, __ALL_QUESTIONNIRES = __DATA_STORE_OBJECT.get_data()
 
 
 def get_questionnaire_list():
+    """
+    Returns questionnaire from json array
+    """
     return __ALL_QUESTIONNIRES
 
-# Returns questionnaire from json array
 
 
 def __get_questionnaire_by_id(id: int):
@@ -82,14 +94,14 @@ def get_question_by_id(questionnaire_id: str, question_id: str):
 
 
 def print_log(data: ResponseModelForLog):
-    logging.log(1, "User Conversation")
+    logger.debug(msg="User Conversation",level=1)
     for items in data:
         questionnaire = __get_questionnaire_by_id(
             str(items[Key.QUESTIONNAIRE_ID]))
         question = questionnaire[Key.QUESTIONS][str(items[Key.QUESTION_ID])]
-        print(1, question[Key.QUESTION_TEXT], "->")
-        print(1, question[Key.ANSWERS][str(items[Key.ANSWER_ID])]
-                    [Key.ANSWER_TEXT], "->")
+        logger.debug( msg=question[Key.QUESTION_TEXT]+ "->",level=1)
+        logger.debug(msg=question[Key.ANSWERS][str(items[Key.ANSWER_ID])]
+                    [Key.ANSWER_TEXT]+ "->",level=1)
 
 
 def get_next_question_by_answer_id(questionnaire_id: str, question_id: str,

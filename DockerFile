@@ -9,4 +9,4 @@ RUN pip install -r requirements_linux.txt
 
 EXPOSE 8000
 
-CMD python manage.py runserver 
+CMD python manage.py runserver

@@ -27,6 +27,11 @@ class FetchListApi(APIView):
 
 
 class SubmitResponseApi(View):
+    """
+    Handles Responses: For fetching first question, fetching next question 
+    based on answer submission.
+    Logs conversation given the end of questionnaire tree is reached.  
+    """
 
     def get(self, request, questionnaire_id, question_id=None, answer_id=None):
         if question_id is None and answer_id is None:
@@ -51,8 +56,8 @@ class SubmitResponseApi(View):
                     del request.session[Key.TRACK]
 
         if Key.ERROR in response:
-            error_code = status.HTTP_404_NOT_FOUND
+            status_code = status.HTTP_404_NOT_FOUND
         else:
-            error_code = status.HTTP_200_OK
+            status_code = status.HTTP_200_OK
 
-        return HttpResponse(json.dumps(response), status=error_code)
+        return HttpResponse(json.dumps(response), status=status_code)

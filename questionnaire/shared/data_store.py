@@ -10,8 +10,18 @@ from django.conf import settings
 from ..datamodels.datamodels import Questionnaire
 from .shared_keys import Key
 
+# import the logging library
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger()
+
 
 class DataStore():
+    """
+    Loads data from json file name specified in settings
+    Validates the structure using json schema 
+    """
     MAX_ANSWERS = 5
 
     def __init__(self, validate_json=True):
@@ -22,7 +32,6 @@ class DataStore():
 
     def get_data(self):
         return self.__questionnaires, self.__questionnaires_list
-    # TODO add the file to path variables
 
     def __get_all_questionnaire(self):
         data = []
@@ -39,7 +48,7 @@ class DataStore():
                     self.__validate_json(data)
                 json_file.close()
         except Exception:
-            print(traceback.format_exc())
+            logger.error(msg=traceback.format_exc())
         return data
 
     def __validate_json(self, data):
