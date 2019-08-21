@@ -16,6 +16,9 @@ import json
 
 
 class FetchListApi(APIView):
+    """
+    Returns list of questionnaire that is prepared on server startup
+    """
     def get(self, args):
         data_list = get_questionnaire_list()
         if not data_list:

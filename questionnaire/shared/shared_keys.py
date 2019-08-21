@@ -1,4 +1,7 @@
 class Key:
+    """
+    Class for keeping global keys that are shared across different modules.
+    """
     TITLE = "title"
     QUESTIONS = "questions"
     QUESTION_ID = "question_id"
