@@ -19,6 +19,7 @@ class FetchListApi(APIView):
     """
     Returns list of questionnaire that is prepared on server startup
     """
+
     def get(self, args):
         data_list = get_questionnaire_list()
         if not data_list:
@@ -53,7 +54,9 @@ class SubmitResponseApi(View):
                                                   (ResponseModelForLog(
                                                       questionnaire_id,
                                                       question_id,
-                                                      answer_id)).data)
+                                                      answer_id)).data
+                                                  )
+                request.session.modified = True
                 if not response[Key.ANSWERS]:
                     print_log(request.session[Key.TRACK])
                     del request.session[Key.TRACK]
